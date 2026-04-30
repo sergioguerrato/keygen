@@ -238,14 +238,14 @@ function generateKey(flags: Flags, size: number, lang: Lang, mode: Mode): GenRes
   return { key, entropy: size * Math.log2(pool.length) };
 }
 
-// 60 bits ≈ "very strong" benchmark; bar fills proportionally up to that
-const STRENGTH_FULL_BITS = 60;
+// 30 bits ≈ "very strong" benchmark; bar fills proportionally up to that
+const STRENGTH_FULL_BITS = 35;
 
 function strengthInfo(bits: number) {
   const pct = Math.max(0, Math.min(100, (bits / STRENGTH_FULL_BITS) * 100));
-  if (bits < 16) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct };
-  if (bits < 28) return { label: 'fair',        bar: 'bg-amber-400',  text: 'text-amber-600',  pct };
-  if (bits < 44) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct };
+  if (bits < 20) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct };
+  if (bits < 24) return { label: 'fair',        bar: 'bg-amber-400',  text: 'text-amber-600',  pct };
+  if (bits < 28) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct };
   return            { label: 'very strong', bar: 'bg-green-500',  text: 'text-green-600',  pct };
 }
 
@@ -555,9 +555,10 @@ export default function KyruPage() {
                         style={{ width: `${s.pct}%` }}
                       />
                     </div>
-                    <span className={`text-xs font-mono font-semibold ${s.text}`}>
-                      {roundedBits} bits · {s.label}
-                    </span>
+                    <div className={`flex items-center text-xs font-mono font-semibold w-44 shrink-0 text-left ${s.text}`}>
+                      <span className="w-[72px]">{roundedBits} bits</span>
+                      <span>· {s.label}</span>
+                    </div>
                   </div>
                 );
               })()}
