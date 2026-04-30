@@ -72,8 +72,12 @@ const DEFAULT_FLAGS: Flags = {
 // ---------------------------------------------------------------------------
 
 function secureRandomInt(max: number): number {
+  // Rejection sampling to avoid modulo bias
   const buf = new Uint32Array(1);
-  window.crypto.getRandomValues(buf);
+  const limit = Math.floor(0x100000000 / max) * max;
+  do {
+    window.crypto.getRandomValues(buf);
+  } while (buf[0] >= limit);
   return buf[0] % max;
 }
 
@@ -131,11 +135,15 @@ function generateKey(flags: Flags, size: number, lang: Lang): GenResult {
   return { key, entropy: size * Math.log2(pool.length) };
 }
 
+// 100 bits ≈ "very strong" benchmark; the bar fills proportionally up to that
+const STRENGTH_FULL_BITS = 100;
+
 function strengthInfo(bits: number) {
-  if (bits < 40) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct: 25  };
-  if (bits < 60) return { label: 'fair',        bar: 'bg-orange-500', text: 'text-orange-600', pct: 50  };
-  if (bits < 80) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct: 75  };
-  return            { label: 'very strong', bar: 'bg-green-500',  text: 'text-green-600',  pct: 100 };
+  const pct = Math.max(0, Math.min(100, (bits / STRENGTH_FULL_BITS) * 100));
+  if (bits < 40) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct };
+  if (bits < 60) return { label: 'fair',        bar: 'bg-orange-500', text: 'text-orange-600', pct };
+  if (bits < 80) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct };
+  return            { label: 'very strong', bar: 'bg-green-500',  text: 'text-green-600',  pct };
 }
 
 // ---------------------------------------------------------------------------
@@ -151,10 +159,13 @@ export default function KeygenPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    const result = generateKey(flags, size, lang);
-    setKey(result.key);
-    setEntropy(result.entropy);
-    setCopied(false);
+    const timer = setTimeout(() => {
+      const result = generateKey(flags, size, lang);
+      setKey(result.key);
+      setEntropy(result.entropy);
+      setCopied(false);
+    }, 120);
+    return () => clearTimeout(timer);
   }, [flags, size, lang]);
 
   const toggleFlag = (flagKey: FlagKey) => {
@@ -222,6 +233,8 @@ export default function KeygenPage() {
                 <button
                   key={flag.key}
                   onClick={() => toggleFlag(flag.key)}
+                  aria-pressed={isOn}
+                  aria-disabled={locked}
                   title={locked ? 'uncheck memorable to unlock' : undefined}
                   className={`
                     flex flex-col items-start px-4 py-3 rounded-xl border-2 text-left
@@ -270,10 +283,12 @@ export default function KeygenPage() {
               </span>
             )}
           </div>
-          <div className="flex gap-1 bg-slate-100 border border-slate-200 rounded-xl p-1 w-fit">
+          <div role="radiogroup" aria-label="Word language" className="flex gap-1 bg-slate-100 border border-slate-200 rounded-xl p-1 w-fit">
             {(['en', 'pt'] as Lang[]).map((l) => (
               <button
                 key={l}
+                role="radio"
+                aria-checked={lang === l}
                 onClick={() => setLang(l)}
                 className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
                   lang === l
@@ -303,6 +318,8 @@ export default function KeygenPage() {
             max={16}
             value={size}
             onChange={(e) => setSize(Number(e.target.value))}
+            aria-label="Password size"
+            aria-valuetext={`${size} characters`}
             className="w-full h-2 rounded-full appearance-none cursor-pointer
               bg-slate-200
               accent-red-500"
@@ -339,7 +356,12 @@ export default function KeygenPage() {
               <p className="text-xs text-slate-400 uppercase tracking-wider mb-3 font-mono">
                 PASSWORD
               </p>
-              <p className="font-mono text-lg md:text-xl text-red-700 break-all leading-relaxed pr-12">
+              <p
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                className="font-mono text-lg md:text-xl text-red-700 break-all leading-relaxed pr-12"
+              >
                 {key}
               </p>
               {(() => {
