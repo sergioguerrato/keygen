@@ -152,7 +152,7 @@ function strengthInfo(bits: number) {
 
 export default function KyruPage() {
   const [flags, setFlags]   = useState<Flags>(DEFAULT_FLAGS);
-  const [size, setSize]     = useState(12);
+  const [size, setSize]     = useState(16);
   const [lang, setLang]     = useState<Lang>('en');
   const [key, setKey]       = useState('');
   const [entropy, setEntropy] = useState(0);
