@@ -179,8 +179,12 @@ function secureRandomInt(max: number): number {
   return buf[0] % max;
 }
 
-function pickRandom<T>(arr: T[]): T {
+function pickRandom<T>(arr: readonly T[]): T {
   return arr[secureRandomInt(arr.length)];
+}
+
+function pickRandomChar(s: string): string {
+  return s.charAt(secureRandomInt(s.length));
 }
 
 function generateMemorablePortion(maxLen: number, words: readonly string[]): { text: string; entropy: number } {
@@ -192,7 +196,7 @@ function generateMemorablePortion(maxLen: number, words: readonly string[]): { t
     const remaining = maxLen - result.length;
     const fitting   = words.filter((w) => w.length <= remaining);
     if (fitting.length === 0) break;
-    const word = pickRandom([...fitting]);
+    const word = pickRandom(fitting);
     entropy += Math.log2(fitting.length);
     result += word.charAt(0).toUpperCase() + word.slice(1);
     safety++;
@@ -212,9 +216,9 @@ function generateKey(flags: Flags, size: number, lang: Lang, mode: Mode): GenRes
     const numCount   = 3; // always 3 numbers
     const wordSize   = Math.max(1, size - 1 - numCount);
     const { text: wordPortion, entropy: wordEntropy } = generateMemorablePortion(wordSize, WORD_LISTS[mode][lang]);
-    const symbol     = pickRandom([...MEMORABLE_SYMBOLS]);
+    const symbol     = pickRandom(MEMORABLE_SYMBOLS);
     const numbers    = Array.from({ length: numCount }, () =>
-      pickRandom([...CHAR_SETS.numerical])
+      pickRandomChar(CHAR_SETS.numerical)
     ).join('');
     const entropy = wordEntropy
       //+ Math.log2(3)                            // if numCount choice
@@ -230,24 +234,26 @@ function generateKey(flags: Flags, size: number, lang: Lang, mode: Mode): GenRes
   if (flags.symbols)      pool += CHAR_SETS.symbols;
   if (!pool)              pool  = CHAR_SETS.alphabetical;
 
-  const key = Array.from({ length: size }, () => pickRandom([...pool])).join('');
+  const key = Array.from({ length: size }, () => pickRandomChar(pool)).join('');
   return { key, entropy: size * Math.log2(pool.length) };
 }
 
-// 30 bits ≈ "very strong" benchmark; bar fills proportionally up to that
-const STRENGTH_FULL_BITS = 30;
+// 60 bits ≈ "very strong" benchmark; bar fills proportionally up to that
+const STRENGTH_FULL_BITS = 60;
 
 function strengthInfo(bits: number) {
   const pct = Math.max(0, Math.min(100, (bits / STRENGTH_FULL_BITS) * 100));
-  if (bits < 20) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct };
-  if (bits < 24) return { label: 'fair',        bar: 'bg-green-400', text: 'text-green-400', pct };
-  if (bits < 28) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct };
+  if (bits < 16) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct };
+  if (bits < 28) return { label: 'fair',        bar: 'bg-amber-400',  text: 'text-amber-600',  pct };
+  if (bits < 44) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct };
   return            { label: 'very strong', bar: 'bg-green-500',  text: 'text-green-600',  pct };
 }
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
+
+const STORAGE_KEY = 'kyru:prefs';
 
 export default function KyruPage() {
   const [flags, setFlags]   = useState<Flags>(DEFAULT_FLAGS);
@@ -257,6 +263,39 @@ export default function KyruPage() {
   const [key, setKey]       = useState('');
   const [entropy, setEntropy] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  // Hydrate preferences from localStorage on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as Partial<{
+          flags: Flags; size: number; lang: Lang; mode: Mode;
+        }>;
+        if (saved.flags) setFlags(saved.flags);
+        if (typeof saved.size === 'number') setSize(saved.size);
+        if (saved.lang === 'pt' || saved.lang === 'en') setLang(saved.lang);
+        if (saved.mode === 'general' || saved.mode === 'office') setMode(saved.mode);
+      }
+    } catch {
+      // Ignore corrupt storage
+    }
+    setHydrated(true);
+  }, []);
+
+  // Persist preferences after hydration
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ flags, size, lang, mode }),
+      );
+    } catch {
+      // Storage may be unavailable (private mode, quota)
+    }
+  }, [flags, size, lang, mode, hydrated]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -314,7 +353,7 @@ export default function KyruPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
             <span style={{ fontFamily: 'var(--font-michroma)' }}>KYRU</span>
             <span className="block text-base md:text-lg font-medium text-slate-500 mt-2">
-              Password Generator | Gerador de Senhas
+              Password Generator
             </span>
           </h1>
           <p className="text-slate-600 text-lg">
@@ -482,7 +521,7 @@ export default function KyruPage() {
         <div className="space-y-10">
 
         {/* Output */}
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-4">
 
             {/* Key display */}
             <div className="relative bg-white border-2 border-red-500/50 rounded-xl px-5 py-5">
@@ -499,16 +538,25 @@ export default function KyruPage() {
               </p>
               {(() => {
                 const s = strengthInfo(entropy);
+                const roundedBits = Math.round(entropy);
                 return (
                   <div className="mt-4 flex items-center gap-3">
-                    <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                    <div
+                      role="progressbar"
+                      aria-label="Password strength"
+                      aria-valuenow={roundedBits}
+                      aria-valuemin={0}
+                      aria-valuemax={STRENGTH_FULL_BITS}
+                      aria-valuetext={`${roundedBits} bits, ${s.label}`}
+                      className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden"
+                    >
                       <div
                         className={`h-full transition-all duration-300 ${s.bar}`}
                         style={{ width: `${s.pct}%` }}
                       />
                     </div>
                     <span className={`text-xs font-mono font-semibold ${s.text}`}>
-                      {Math.round(entropy)} bits · {s.label}
+                      {roundedBits} bits · {s.label}
                     </span>
                   </div>
                 );
@@ -552,7 +600,7 @@ export default function KyruPage() {
               </p>
               {flags.memorable && (
                 <p className="pt-1 text-xs text-slate-400">
-                  Pattern: words + symbols + 3 numbers (total {size})
+                  Pattern: words + 1 symbol + 3 numbers (total {size})
                 </p>
               )}
               {!flags.memorable && activeLabels.length > 0 && (
@@ -577,13 +625,13 @@ export default function KyruPage() {
 
       {/* Footer */}
       <footer className="w-full pb-2">
-        <p className="text-xs text-app-muted text-center">
+        <p className="text-xs text-slate-500 text-center">
           Built by{' '}
           <a
             href="https://www.linkedin.com/in/sergio-guerrato"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-app-primary transition-colors"
+            className="hover:text-red-600 transition-colors"
           >
             Sérgio Guerrato
           </a>
