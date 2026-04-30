@@ -135,14 +135,14 @@ function generateKey(flags: Flags, size: number, lang: Lang): GenResult {
   return { key, entropy: size * Math.log2(pool.length) };
 }
 
-// 100 bits ≈ "very strong" benchmark; the bar fills proportionally up to that
-const STRENGTH_FULL_BITS = 100;
+// 60 bits ≈ "very strong" benchmark; bar fills proportionally up to that
+const STRENGTH_FULL_BITS = 30;
 
 function strengthInfo(bits: number) {
   const pct = Math.max(0, Math.min(100, (bits / STRENGTH_FULL_BITS) * 100));
-  if (bits < 40) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct };
-  if (bits < 60) return { label: 'fair',        bar: 'bg-orange-500', text: 'text-orange-600', pct };
-  if (bits < 80) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct };
+  if (bits < 12) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct };
+  if (bits < 16) return { label: 'fair',        bar: 'bg-green-400', text: 'text-green-400', pct };
+  if (bits < 24) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct };
   return            { label: 'very strong', bar: 'bg-green-500',  text: 'text-green-600',  pct };
 }
 
@@ -212,7 +212,7 @@ export default function KyruPage() {
         {/* Header */}
         <div className="space-y-2">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
-            KYRU
+            <span style={{ fontFamily: 'var(--font-michroma)' }}>KYRU</span>
             <span className="block text-base md:text-lg font-medium text-slate-500 mt-2">
               Password Generator | Gerador de Senhas
             </span>
@@ -319,7 +319,7 @@ export default function KyruPage() {
           <input
             type="range"
             min={6}
-            max={16}
+            max={48}
             value={size}
             onChange={(e) => setSize(Number(e.target.value))}
             aria-label="Password size"
@@ -330,7 +330,7 @@ export default function KyruPage() {
           />
           <div className="flex justify-between text-xs text-slate-400 font-mono">
             <span>6</span>
-            <span>16</span>
+            <span>48</span>
           </div>
         </div>
 
