@@ -57,7 +57,7 @@ const FLAGS = [
 type FlagKey = typeof FLAGS[number]['key'];
 type Flags = Record<FlagKey, boolean>;
 
-// Flags locked when Memorable is active — all forced ON, but disabled
+// Flags locked when Memorable is active - all forced ON, but disabled
 const MEMORABLE_LOCKED: FlagKey[] = ['numerical', 'symbols', 'alphabetical'];
 
 const DEFAULT_FLAGS: Flags = {
@@ -150,7 +150,7 @@ function strengthInfo(bits: number) {
 // Component
 // ---------------------------------------------------------------------------
 
-export default function KeygenPage() {
+export default function KyruPage() {
   const [flags, setFlags]   = useState<Flags>(DEFAULT_FLAGS);
   const [size, setSize]     = useState(12);
   const [lang, setLang]     = useState<Lang>('en');
@@ -212,10 +212,14 @@ export default function KeygenPage() {
         {/* Header */}
         <div className="space-y-2">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
-            KEYGEN
+            KYRU
+            <span className="block text-base md:text-lg font-medium text-slate-500 mt-2">
+              Password Generator | Gerador de Senhas
+            </span>
           </h1>
           <p className="text-slate-600 text-lg">
-            Secure password generator with configurable parameters.
+            Generate strong, random passwords instantly. Free and secure no signup required.
+            Gere senhas fortes e aleatórias. Grátis e seguro, sem cadastro.
           </p>
         </div>
 
