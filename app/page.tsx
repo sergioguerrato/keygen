@@ -13,39 +13,137 @@ const CHAR_SETS = {
 };
 
 const WORD_LISTS = {
-  pt: [
-    // 3–4 letras
-    'lua','sol','rio','mar','paz','rei','luz','mel','asa','voz',
-    'lobo','urso','gato','leao','pato','jade','ouro','neve','fogo','gelo',
-    // 5–7 letras
-    'tigre','aguia','cobra','cisne','veado','manga','caju','pedra','chama','prata',
-    'futebol','tenis','boxe','surfe','volei','coral','safira','rubi','floresta',
-    'oceano','trovao','cristal','tucano','gaviao','goiaba','geleira','montanha',
-    // 8 letras
-    'esmeralda','capivara','maracuja','relampago','basquete','diamante','abacaxi', 'mariposa',
-    // 9 letras
-    'borboleta','crocodilo','horizonte','jacaranda','labirinto','submarino',
-    'pavimento','chocolate','carinhoso','vitorioso','queimados',
-  ],
-  en: [
-    // 3–4 letras
-    'oak','fox','gem','axe','arc',
-    'wolf','bear','jade','rose','iron','gold','blue','reef','dusk','dawn',
-    // 5–7 letras
-    'crane','tiger','eagle','frost','storm','blade','flame','amber','coral','onyx',
-    'apple','mango','lemon','maple','cedar','piano','arrow','delta','scout','raven',
-    'falcon','violet','tennis','soccer','boxing','silver','golden','shadow','cobalt',
-    'crystal','thunder','surfing','bamboo','cricket','diamond','emerald','sapphire',
-    // 9 letras
-    'adventure','avalanche','butterfly','cathedral','challenge','crocodile',
-    'discovery','evolution','fireplace','goldfinch','hurricane','jellyfish',
-    'landscape','lightning','limestone','moonlight','nightfall','porcupine',
-    'quicksand','rainstorm','sandstone','snowflake','spotlight','starlight',
-    'submarine','sunflower','telescope','toadstool','waterfall','whirlpool','wolverine',
-  ],
+  general: {
+    pt: [
+      // 3 letras
+      'pao','ipe','ano','dia','vez',
+      // 4 letras
+      'lua','sol','rio','mar','paz','rei','luz','mel','asa','voz',
+      'lobo','urso','gato','leao','pato','jade','ouro','neve','fogo','gelo',
+      'vela','cera','raio','agua','onda','arco','pena','toca','pulo','sino',
+      'peao','alma','bala','sapo','riso','lula','anta','anjo','rosa','asno',
+      'cano','foco','suco','fada','hino',
+      // 5 letras
+      'tigre','aguia','cobra','cisne','veado','manga','pedra','chama','prata',
+      'areia','praia','chuva','vento','nuvem','panda','pomba','pluma','cervo',
+      'ponte','balsa','terra','bicho','junco','faixa','polvo','urubu','fauna',
+      'flora','jaula','aroma','poste','volei','tenis','surfe','coral',
+      // 6 letras
+      'safira','sereia','marfim','cristal','tucano','gaviao','goiaba','jardim',
+      'planta','camelo','coelho','cavalo','jacare','jaguar','arvore','falcao',
+      'abelha','viagem','salmao',
+      // 7 letras
+      'futebol','floresta','oceano','trovao','geleira','raposa','muralha',
+      'batalha','planeta','deserto','simbolo','torneio','salmoura',
+      // 8 letras
+      'montanha','esmeralda','capivara','maracuja','relampago','basquete',
+      'diamante','abacaxi','mariposa','panqueca','papagaio','camaleao',
+      'toupeira','cordeiro','libelula',
+      // 9 letras
+      'escultura','cachorra','borboleta','crocodilo','horizonte','jacaranda',
+      'labirinto','submarino','pavimento','chocolate','carinhoso','vitorioso',
+      'queimados','andorinha','tartaruga','primavera',
+      // 10 letras
+      'paquiderme','passarinho','lavanderia',
+    ],
+    en: [
+      // 3 letras
+      'oak','fox','gem','axe','arc','ash','elm','ice','ivy','jay',
+      'owl','cub','doe','fly','fin','fog','fur','sea','sky','tea',
+      // 4 letras
+      'wolf','bear','jade','rose','iron','gold','blue','reef','dusk','dawn',
+      'bird','calf','deer','duck','fawn','fern','fish','flag','frog','gull',
+      'hawk','kite','lake','leaf','lion','moon','palm','pear','pine','plum',
+      // 5 letras
+      'crane','tiger','eagle','frost','storm','blade','flame','amber','coral',
+      'apple','mango','lemon','maple','cedar','piano','arrow','delta','scout',
+      'raven','berry','beach','bison','bloom','cliff','cloud','comet','daisy',
+      'giant','globe','goose','grape','grove','jewel','onyx',
+      // 6 letras
+      'falcon','violet','tennis','soccer','boxing','silver','golden','shadow',
+      'cobalt','badger','beetle','canyon','canary','cherry','cougar','donkey',
+      'dragon','forest','garden','marble','meadow','monkey','nature','planet',
+      // 7 letras
+      'crystal','thunder','surfing','bamboo','cricket','diamond','emerald',
+      'blossom','buffalo','cheetah','cottage','dolphin','feather','leopard',
+      'lobster','octopus','peacock','penguin','raccoon','tornado',
+      // 8 letras
+      'sapphire','capybara','cardinal','lavender','magnolia','mountain',
+      'mushroom','paradise','pinecone','scorpion','sunshine','treasure',
+      'twilight',
+      // 9 letras
+      'adventure','avalanche','butterfly','cathedral','challenge','crocodile',
+      'discovery','evolution','fireplace','goldfinch','hurricane','jellyfish',
+      'landscape','lightning','limestone','moonlight','nightfall','porcupine',
+      'quicksand','rainstorm','sandstone','snowflake','spotlight','starlight',
+      'submarine','sunflower','telescope','toadstool','waterfall','whirlpool',
+      'wolverine','alligator','blackbird','partridge','succulent','swordfish',
+      // 10 letras
+      'chinchilla','helicopter','lighthouse','rainforest','wildflower',
+    ],
+  },
+  office: {
+    pt: [
+      // 3 letras
+      'ima',
+      // 4 letras
+      'capa','cabo','copo','fone','fita','foto','lupa','mapa','mesa','nota',
+      'sala','tela','vaso','selo',
+      // 5 letras
+      'aviso','bloco','caixa','chave','cesto','cofre','ficha','folha','lapis',
+      'lente','livro','mouse','papel','pasta','porta','regua','talao','tampa',
+      'tinta','toner','senha','prego',
+      // 6 letras
+      'agenda','antena','balcao','bobina','camera','caneta','cartao','cordao',
+      'cracha','diario','escada','gaveta','grampo','oficio','painel','parede',
+      'piloto','quadro','recibo','tabela','tablet','tomada',
+      // 7 letras
+      'adesivo','armario','arquivo','cadeira','caderno','caixote','estante',
+      'monitor','papelao','plotter','printer','relogio','scanner','sulfite',
+      'teclado','tesoura',
+      // 8 letras
+      'apostila','carrinho','cubiculo','envelope','estilete','etiqueta',
+      'fichario','marcador','notebook','panfleto','pendrive','planilha',
+      'poltrona','roteador','telefone',
+      // 9 letras
+      'divisoria','gaveteiro','microfone','prancheta','relatorio',
+      // 10 letras
+      'calendario','formulario','grampeador','impressora','prateleira',
+    ],
+    en: [
+      // 3 letras
+      'bin','cup','fax','jar','key','log','mat','mug','pad','pen',
+      'pin','tab','tip',
+      // 4 letras
+      'book','card','clip','cord','desk','disk','file','font','lamp','page',
+      'plug','post','ream','ring','seal','sign','tape','tray','vase','wire',
+      // 5 letras
+      'bench','board','brush','cable','chair','chart','chest','drive','easel',
+      'frame','glass','label','light','mouse','paint','paper','phone','photo',
+      'plate','ruler','scale','sheet','shelf','slate','stamp','stand','table',
+      'token','towel','vault',
+      // 6 letras
+      'basket','binder','button','drawer','eraser','folder','hammer','hanger',
+      'holder','ladder','ledger','locker','marker','pencil','pocket','poster',
+      'ribbon','router','screen','server','socket','switch','tablet','ticket',
+      // 7 letras
+      'adapter','armrest','blotter','cabinet','charger','divider','journal',
+      'monitor','notepad','package','planner','plotter','postage','printer',
+      'scanner','spinner','stapler','sticker','stencil','tracker',
+      // 8 letras
+      'calendar','computer','document','envelope','hardware','keyboard',
+      'notebook','scissors','software','terminal','textbook',
+      // 9 letras
+      'briefcase','cartridge','container','dispenser','laminator','projector',
+      'telephone','paperback',
+      // 10 letras
+      'calculator','microphone','smartphone','typewriter','whiteboard',
+    ],
+  },
 } as const;
 
-type Lang = keyof typeof WORD_LISTS;
+type Mode = keyof typeof WORD_LISTS;
+type Lang = keyof typeof WORD_LISTS['general'];
 
 const FLAGS = [
   { key: 'memorable',    label: 'Memorable',    description: 'real words'      },
@@ -103,22 +201,23 @@ function generateMemorablePortion(maxLen: number, words: readonly string[]): { t
   return { text: result, entropy };
 }
 
-const MEMORABLE_SYMBOLS = ['.', '!', '@'] as const;
+const MEMORABLE_SYMBOLS = ['.', ',', '!', '@', '$', '%', '&', '*', '-', '_', '+', '=', '/'] as const;
 
 type GenResult = { key: string; entropy: number };
 
-function generateKey(flags: Flags, size: number, lang: Lang): GenResult {
+function generateKey(flags: Flags, size: number, lang: Lang, mode: Mode): GenResult {
   if (flags.memorable) {
     // Pattern: word(size - 1 - numCount) + 1 symbol + 1–3 numbers
-    const numCount   = secureRandomInt(3) + 1; // 1, 2 or 3
+    //const numCount   = secureRandomInt(3) + 1; // 1, 2 or 3
+    const numCount   = 3; // always 3 numbers
     const wordSize   = Math.max(1, size - 1 - numCount);
-    const { text: wordPortion, entropy: wordEntropy } = generateMemorablePortion(wordSize, WORD_LISTS[lang]);
+    const { text: wordPortion, entropy: wordEntropy } = generateMemorablePortion(wordSize, WORD_LISTS[mode][lang]);
     const symbol     = pickRandom([...MEMORABLE_SYMBOLS]);
     const numbers    = Array.from({ length: numCount }, () =>
       pickRandom([...CHAR_SETS.numerical])
     ).join('');
     const entropy = wordEntropy
-      + Math.log2(3)                            // numCount choice
+      //+ Math.log2(3)                            // if numCount choice
       + Math.log2(MEMORABLE_SYMBOLS.length)     // symbol choice
       + Math.log2(10) * numCount;               // digits
     return { key: wordPortion + symbol + numbers, entropy };
@@ -135,14 +234,14 @@ function generateKey(flags: Flags, size: number, lang: Lang): GenResult {
   return { key, entropy: size * Math.log2(pool.length) };
 }
 
-// 60 bits ≈ "very strong" benchmark; bar fills proportionally up to that
+// 30 bits ≈ "very strong" benchmark; bar fills proportionally up to that
 const STRENGTH_FULL_BITS = 30;
 
 function strengthInfo(bits: number) {
   const pct = Math.max(0, Math.min(100, (bits / STRENGTH_FULL_BITS) * 100));
-  if (bits < 12) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct };
-  if (bits < 16) return { label: 'fair',        bar: 'bg-green-400', text: 'text-green-400', pct };
-  if (bits < 24) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct };
+  if (bits < 20) return { label: 'weak',        bar: 'bg-red-500',    text: 'text-red-600',    pct };
+  if (bits < 24) return { label: 'fair',        bar: 'bg-green-400', text: 'text-green-400', pct };
+  if (bits < 28) return { label: 'strong',      bar: 'bg-lime-500',   text: 'text-lime-600',   pct };
   return            { label: 'very strong', bar: 'bg-green-500',  text: 'text-green-600',  pct };
 }
 
@@ -154,19 +253,20 @@ export default function KyruPage() {
   const [flags, setFlags]   = useState<Flags>(DEFAULT_FLAGS);
   const [size, setSize]     = useState(16);
   const [lang, setLang]     = useState<Lang>('en');
+  const [mode, setMode]     = useState<Mode>('general');
   const [key, setKey]       = useState('');
   const [entropy, setEntropy] = useState(0);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const result = generateKey(flags, size, lang);
+      const result = generateKey(flags, size, lang, mode);
       setKey(result.key);
       setEntropy(result.entropy);
       setCopied(false);
     }, 120);
     return () => clearTimeout(timer);
-  }, [flags, size, lang]);
+  }, [flags, size, lang, mode]);
 
   const toggleFlag = (flagKey: FlagKey) => {
     // Numerical and Symbols are locked while Memorable is on
@@ -185,7 +285,7 @@ export default function KyruPage() {
   };
 
   const handleGenerate = () => {
-    const result = generateKey(flags, size, lang);
+    const result = generateKey(flags, size, lang, mode);
     setKey(result.key);
     setEntropy(result.entropy);
     setCopied(false);
@@ -204,7 +304,7 @@ export default function KyruPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[linear-gradient(180deg,#ffffff_0%,#f1f5f9_30%,#cbd5e1_70%,#94a3b8_100%)]">
-      <div className="flex-1 max-w-6xl w-full mx-auto px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <div className="flex-1 max-w-6xl w-full mx-auto px-6 xl:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-center">
 
         {/* Left column */}
         <div className="space-y-10">
@@ -244,9 +344,9 @@ export default function KyruPage() {
                     flex flex-col items-start px-4 py-3 rounded-xl border-2 text-left
                     transition-all duration-200 min-w-[110px]
                     ${locked
-                      ? 'border-red-400/40 bg-red-600/5 cursor-not-allowed opacity-30'
+                      ? 'border-red-400/40 bg-gradient-to-r from-red-600/5 to-slate-900/5 cursor-not-allowed opacity-30'
                       : isOn
-                        ? 'border-red-500 bg-red-600/10 shadow-[0_0_12px_1px_rgba(239,68,68,0.3)]'
+                        ? 'border-red-500 bg-gradient-to-r from-red-600/10 to-slate-900/10 shadow-[0_0_12px_1px_rgba(239,68,68,0.3)]'
                         : 'border-slate-300 bg-white/50 hover:border-red-400'
                     }
                   `}
@@ -275,35 +375,64 @@ export default function KyruPage() {
           </div>
         </div>
 
-        {/* Language */}
-        <div className={`space-y-3 transition-opacity duration-200 ${flags.memorable ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
-          <div className="flex items-center gap-3">
+        {/* Language + Mode */}
+        <div className={`flex flex-wrap gap-8 transition-opacity duration-200 ${flags.memorable ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
+
+          {/* Language */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+                Language
+              </p>
+              {!flags.memorable && (
+                <span className="text-xs text-slate-400 italic">
+                  available with Memorable
+                </span>
+              )}
+            </div>
+            <div role="radiogroup" aria-label="Word language" className="flex gap-1 bg-slate-100 border border-slate-200 rounded-xl p-1 w-fit">
+              {(['en', 'pt'] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  role="radio"
+                  aria-checked={lang === l}
+                  onClick={() => setLang(l)}
+                  className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    lang === l
+                      ? 'bg-gradient-to-r from-red-600 to-slate-900 text-white shadow-sm'
+                      : 'text-slate-500 hover:text-red-600'
+                  }`}
+                >
+                  {l === 'pt' ? 'PT-BR' : 'EN-US'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Mode */}
+          <div className="space-y-3">
             <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
-              Language
+              Mode
             </p>
-            {!flags.memorable && (
-              <span className="text-xs text-slate-400 italic">
-                available with Memorable
-              </span>
-            )}
+            <div role="radiogroup" aria-label="Word mode" className="flex gap-1 bg-slate-100 border border-slate-200 rounded-xl p-1 w-fit">
+              {(['general', 'office'] as Mode[]).map((m) => (
+                <button
+                  key={m}
+                  role="radio"
+                  aria-checked={mode === m}
+                  onClick={() => setMode(m)}
+                  className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    mode === m
+                      ? 'bg-gradient-to-r from-red-600 to-slate-900 text-white shadow-sm'
+                      : 'text-slate-500 hover:text-red-600'
+                  }`}
+                >
+                  {m === 'general' ? 'GENERAL' : 'OFFICE'}
+                </button>
+              ))}
+            </div>
           </div>
-          <div role="radiogroup" aria-label="Word language" className="flex gap-1 bg-slate-100 border border-slate-200 rounded-xl p-1 w-fit">
-            {(['en', 'pt'] as Lang[]).map((l) => (
-              <button
-                key={l}
-                role="radio"
-                aria-checked={lang === l}
-                onClick={() => setLang(l)}
-                className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                  lang === l
-                    ? 'bg-gradient-to-r from-red-600 to-slate-900 text-white shadow-sm'
-                    : 'text-slate-500 hover:text-red-600'
-                }`}
-              >
-                {l === 'pt' ? 'PT-BR' : 'EN-US'}
-              </button>
-            ))}
-          </div>
+
         </div>
 
         {/* Size slider */}
@@ -423,7 +552,7 @@ export default function KyruPage() {
               </p>
               {flags.memorable && (
                 <p className="pt-1 text-xs text-slate-400">
-                  Pattern: word + . ! @ + 1–3 numbers (total {size})
+                  Pattern: words + symbols + 3 numbers (total {size})
                 </p>
               )}
               {!flags.memorable && activeLabels.length > 0 && (
@@ -431,6 +560,12 @@ export default function KyruPage() {
                   Pool: {activeLabels.join(' + ')}
                 </p>
               )}
+            </div>
+
+            <div className="bg-slate-100 rounded-xl px-5 py-4 border border-slate-200 space-y-1 font-mono text-sm">
+              <p className="pt-1 text-xs text-slate-400">
+                  NOTE: Strength ratings are calibrated for everyday use as email, social media, and general services. For offline attack resistance (e.g. leaked database hashes), disable Memorable mode and target 80+ bits.
+              </p>
             </div>
 
         </div>
